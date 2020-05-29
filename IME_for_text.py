@@ -32,7 +32,7 @@ class Explainer:
         model.eval()
         all_outputs = []
         rand_id = random.sample([*range(self.nX)], 100)
-        for i in tqdm(rand_id):
+        for i in rand_id: #tqdm(rand_id):
             text = self.data[i]
             tokenized_text = tokenizer.tokenize(text)
             # Convert token to vocabulary indices
@@ -86,8 +86,8 @@ class Explainer:
             n_iter_temp = []
             expl_instance = []
             stddevs_instance = []
-            for a in tqdm(range(nA)):  # for each attribute
-                print(id, a)
+            for a in range(nA):  # for each attribute
+                print(f"feature {a+1}/{nA}")
                 conv = False
                 n_iter_ = 0
                 expl = np.zeros(self.nC)
