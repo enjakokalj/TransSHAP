@@ -8,7 +8,8 @@ import logging
 logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
 logging.getLogger().setLevel(logging.INFO)
 
-class Explainer:
+
+class IMExplainer:
 
     def __init__(self, model, data, n_iter, err, tokenizer, bag_of_words):
         self.model = model
@@ -32,7 +33,8 @@ class Explainer:
         model.eval()
         all_outputs = []
         rand_id = random.sample([*range(self.nX)], 100)
-        for i in rand_id: #tqdm(rand_id):
+        logging.info("Calculating expected value from train data")
+        for i in tqdm(rand_id):
             text = self.data[i]
             tokenized_text = tokenizer.tokenize(text)
             # Convert token to vocabulary indices
@@ -66,12 +68,12 @@ class Explainer:
         # contribution_values = np.zeros((self.nC, data_to_explain.shape[0], self.nA))
         # stddevs = np.zeros((self.nC, data_to_explain.shape[0], self.nA))
         # n_iter_final = np.zeros((data_to_explain.shape[0], self.nA))
-        for id, instance in enumerate(tqdm(data_to_explain)):  # for each instance
+        for ii, instance in enumerate(data_to_explain): #enumerate(tqdm(data_to_explain)):  # for each instance
+            logging.info(f"Example {ii+1}/{len(data_to_explain)} start")
             # data_raw = self.remove_punc(instance)
             data_raw = self.tweet_tokenizer.tokenize(instance)
-            data_raw = [x for x in data_raw if x not in ".,:;"]
+            data_raw = [x for x in data_raw if x not in ".,:;'"]
             self.tweets.append(data_raw)
-            data_ids = np.array(self.text_to_ids(instance)).reshape(1, -1)
             nA = len(data_raw)
             idx = np.arange(len(data_raw))
 
@@ -87,7 +89,7 @@ class Explainer:
             expl_instance = []
             stddevs_instance = []
             for a in range(nA):  # for each attribute
-                print(f"feature {a+1}/{nA}")
+                # print(f"feature {a+1}/{nA}")
                 conv = False
                 n_iter_ = 0
                 expl = np.zeros(self.nC)
@@ -120,7 +122,7 @@ class Explainer:
 
                     tokenized_nopad = [self.tokenizer.tokenize(text) for text in X_temp]
                     MAX_SEQ_LEN = max(len(x) for x in tokenized_nopad)
-                    tokenized_text = [['[PAD]', ] * MAX_SEQ_LEN for i in range(len(X_temp))]
+                    tokenized_text = [['[PAD]', ] * MAX_SEQ_LEN for _ in range(len(X_temp))]
                     for i in range(len(X_temp)):
                         tokenized_text[i][0:len(tokenized_nopad[i])] = tokenized_nopad[i][0:MAX_SEQ_LEN]
                     indexed_tokens = [self.tokenizer.convert_tokens_to_ids(tt) for tt in tokenized_text]
@@ -128,7 +130,7 @@ class Explainer:
 
                     # Predict all tokens
                     with torch.no_grad():
-                        outputs = self.model(input_ids=tokens_tensor)  # , token_type_ids=segments_tensors)
+                        outputs = self.model(input_ids=tokens_tensor)
                         # logits = outputs[0]
                         evals = outputs.detach().cpu().numpy()
 
@@ -141,9 +143,9 @@ class Explainer:
                     v2 = stddev / n_iter_ - (expl / n_iter_) ** 2
                     # v2 = np.var(diff, axis=0)
                     z_sq = (stats.norm.ppf(self.err / 2)) ** 2
-                    # needed_iter = np.ceil(self.n_iter * (z_sq * v2 / self.err ** 2)) ## this one!
+                    # needed_iter = np.ceil(self.n_iter * (z_sq * v2 / self.err ** 2))
                     needed_iter = np.ceil(z_sq * v2 / self.err ** 2)
-                    print("needed", needed_iter, "n", n_iter_)
+                    # print("needed", needed_iter, "n", n_iter_)
                     if all(needed_iter < n_iter_):
                         conv = True
                         n_iter_temp.append(n_iter_)
@@ -157,6 +159,8 @@ class Explainer:
                 # for i in range(len(expl)):
                     # contribution_values[i, id, a] = expl[i]
                     # stddevs[i, id, a] = stddev[i]
+                
+            logging.info(f"Example {ii+1}/{len(data_to_explain)} stop")
 
             n_iter_final.append(n_iter_temp)
             contribution_values.append(np.array(expl_instance))
@@ -179,8 +183,11 @@ class Explainer:
             pred = self.softmax(self.model(tens).detach().numpy())[0]
             predictions.append(pred)
 
-        diff_by_class = np.array([self.softmax(self.model(torch.tensor(np.array(self.text_to_ids(instance)).reshape(1, -1))).detach().cpu().numpy()[0]) for instance in data_to_explain]) - self.expected_value
-        sum_by_class = np.array([np.sum(contribution_values_final[i], axis=0) for i in range(len(contribution_values_final))])
+        diff_by_class = np.array([self.softmax(self.model(torch.tensor(np.array(self.text_to_ids(instance))
+                                                                       .reshape(1, -1))).detach().cpu().numpy()[0])
+                                  for instance in data_to_explain]) - self.expected_value
+        sum_by_class = np.array([np.sum(contribution_values_final[i], axis=0)
+                                 for i in range(len(contribution_values_final))])
 
         # sum_by_class & diff_by_class should be the same
         diff_ratio = diff_by_class / sum_by_class
