@@ -7,9 +7,10 @@ def plot_explanation(tokenized_text, values, class_to_explain):
     plt.figure(figsize=(12, 6))
     colors = ["green" if x > 0 else "red" for x in values]
     plt.bar([*range(len(values))], values, color=colors)
-    plt.xticks(np.arange(len(tokenized_text)), tokenized_text)
-    title = "Predicted class {}".format(class_to_explain)
-    plt.title(title)
+    plt.xticks(np.arange(len(tokenized_text)), tokenized_text, fontsize=15)
+    plt.yticks(fontsize=15)
+    title = "Predicted class: {}".format(class_to_explain)
+    plt.title(title, fontsize=20)
     plt.tight_layout()
     plt.show()
 
