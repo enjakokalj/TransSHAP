@@ -11,7 +11,7 @@ logging.getLogger().setLevel(logging.INFO)
 
 class IMExplainer:
 
-    def __init__(self, model, data, n_iter, err, tokenizer, bag_of_words):
+    def __init__(self, model, data, size_bg_data, n_iter, err, tokenizer, bag_of_words):
         self.model = model
         self.data = data if type(data) == np.ndarray else np.array(data)
         self.n_iter = n_iter
@@ -32,7 +32,7 @@ class IMExplainer:
         model.to(self.device)
         model.eval()
         all_outputs = []
-        rand_id = random.sample([*range(self.nX)], 100)
+        rand_id = random.sample([*range(self.nX)], size_bg_data)
         logging.info("Calculating expected value from train data")
         for i in tqdm(rand_id):
             text = self.data[i]
