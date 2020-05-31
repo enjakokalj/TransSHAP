@@ -8,15 +8,20 @@ logging.getLogger().setLevel(logging.INFO)
 
 class SHAPexplainer:
 
-    def __init__(self, model, tokenizer):
+    def __init__(self, model, tokenizer, words_dict, words_dict_reverse):
         self.model = model
         self.tokenizer = tokenizer
         self.device = "cpu"
         self.tweet_tokenizer = TweetTokenizer()
+        self.words_dict = words_dict
+        self.words_dict_reverse = words_dict_reverse
 
 
-    def predict(self, indexed_tokens):
-        self.model.to(self.device)
+    def predict(self, indexed_words):
+        # self.model.to(self.device)
+
+        sentences = [[self.words_dict[xx] if xx != 0 else "" for xx in x] for x in indexed_words]
+        indexed_tokens, _, _ = self.tknz_to_idx(sentences)
 
         # ref = self.tweet_tokenizer.tokenize(data[0])
         # data_temp = [ref]
@@ -68,4 +73,14 @@ class SHAPexplainer:
         for i in range(len(tokenized_nopad)):
             tokenized_text[i][0:len(tokenized_nopad[i])] = tokenized_nopad[i][0:MAX_SEQ_LEN]
         indexed_tokens = np.array([np.array(self.tokenizer.convert_tokens_to_ids(tt)) for tt in tokenized_text])
-        return indexed_tokens, MAX_SEQ_LEN
+        return indexed_tokens, tokenized_text, MAX_SEQ_LEN
+
+
+    def dt_to_idx(self, data, max_seq_len=None):
+        idx_dt = [[self.words_dict_reverse[xx] for xx in x] for x in data]
+        if not max_seq_len:
+            max_seq_len = min(max(len(x) for x in idx_dt), 512)
+        for i, x in enumerate(idx_dt):
+            if len(x) < max_seq_len:
+                idx_dt[i] = x + [0] * (max_seq_len - len(x))
+        return np.array(idx_dt), max_seq_len
