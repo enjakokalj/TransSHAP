@@ -89,7 +89,7 @@ class IMExplainer:
             expl_instance = []
             stddevs_instance = []
             for a in range(nA):  # for each attribute
-                # print(f"feature {a+1}/{nA}")
+                print(f"feature {a+1}/{nA}")
                 conv = False
                 n_iter_ = 0
                 expl = np.zeros(self.nC)
@@ -145,7 +145,7 @@ class IMExplainer:
                     z_sq = (stats.norm.ppf(self.err / 2)) ** 2
                     # needed_iter = np.ceil(self.n_iter * (z_sq * v2 / self.err ** 2))
                     needed_iter = np.ceil(z_sq * v2 / self.err ** 2)
-                    # print("needed", needed_iter, "n", n_iter_)
+                    print("needed", needed_iter, "n", n_iter_)
                     if all(needed_iter < n_iter_):
                         conv = True
                         n_iter_temp.append(n_iter_)
@@ -200,3 +200,4 @@ class IMExplainer:
         self.feature_importance = [x/np.sum(x) for x in sums]
 
         return contribution_values_final, self.tweets, predictions
+    
