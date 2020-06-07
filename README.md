@@ -63,6 +63,7 @@ for i, example in enumerate(to_use):
     #exp.local_exp = {x: [(xx, yy / (sum(hh for _, hh in exp.local_exp[x])/sum_)) for xx, yy in exp.local_exp[x]] for x in exp.local_exp}
     exp.show_in_notebook(text=True, labels=(exp.available_labels()[0],))
 ```
+LIME explanations for positive (top) and negative (bottom) sentiment:
 ![Example LIME positive sentiment](figures/lime_pos.png)
 ![Example LIME negative sentiment](figures/lime_neg.png)
 
@@ -98,6 +99,7 @@ m = max(d, key=d.get)
 print(" ".join(texts_[-1:][0]))
 shap.force_plot(explainer.expected_value[m], shap_values[m][0, :len_], texts_[-1:][0])
 ```
+SHAP explanations for positive (top) and negative (bottom) sentiment:
 ![Example SHAP positive sentiment](figures/shap_pos.png)
 ![Example SHAP negative sentiment](figures/shap_neg.png)
 
@@ -108,4 +110,5 @@ from explainers import visualize_explanations
 visualize_explanations.bar_chart_explanation(text, contribution_values, class_to_explain, prediction_probability)
 visualize_explanations.text_box_explanation(text, contribution_values)
 ```
+An example of our approach to visualization of prediction explanations for positive sentiment:
 ![Example prediction explanation](figures/visualize_expl.png)
