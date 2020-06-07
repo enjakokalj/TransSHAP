@@ -200,4 +200,3 @@ class IMExplainer:
         self.feature_importance = [x/np.sum(x) for x in sums]
 
         return contribution_values_final, self.tweets, predictions
-    
