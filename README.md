@@ -1,5 +1,5 @@
 # interpret_BERT
-
+(a, b) Interpreting the BERT model with explanation methods LIME (https://github.com/marcotcr/lime) and SHAP (https://github.com/slundberg/shap) using their visualization approach, and (c) presenting our own visualizations that make the explanation of predictions for textual data more intuitive.
 
 ### Load model / test texts
 ```python
@@ -43,7 +43,7 @@ tknzr = TweetTokenizer()
 bag_of_words = set([xx for x in train_data for xx in tknzr.tokenize(x)])
 ```
 
-### Explanation method LIME
+### a) Explanation method LIME
 ```python
 from lime.lime_text import LimeTextExplainer
 from explainers.LIME_for_text import LIMExplainer
@@ -66,7 +66,7 @@ for i, example in enumerate(to_use):
 ![Example LIME positive sentiment](figures/lime_pos.png)
 ![Example LIME negative sentiment](figures/lime_neg.png)
 
-### Explanation method SHAP
+### b) Explanation method SHAP
 ```python
 import shap
 from explainers.SHAP_for_text import SHAPexplainer
@@ -89,14 +89,23 @@ explainer = shap.KernelExplainer(model=predictor.predict, data=idx_train_data)
 texts_ = [predictor.split_string(x) for x in texts]
 idx_texts, _ = predictor.dt_to_idx(texts_, max_seq_len=max_seq_len)
 
-for to_use in [idx_texts[-2:-1], idx_texts[-1:]]:
-    shap_values = explainer.shap_values(X=to_use, nsamples=64, l1_reg="aic")
+to_use = idx_texts[-1:]
+shap_values = explainer.shap_values(X=to_use, nsamples=64, l1_reg="aic")
 
-    len_ = len(texts_[-1:][0])
-    d = {i: sum(x > 0 for x in shap_values[i][0, :len_]) for i, x in enumerate(shap_values)}
-    m = max(d, key=d.get)
-    print(" ".join(texts_[-1:][0]))
-    shap.force_plot(explainer.expected_value[m], shap_values[m][0, :len_], texts_[-1:][0])
+len_ = len(texts_[-1:][0])
+d = {i: sum(x > 0 for x in shap_values[i][0, :len_]) for i, x in enumerate(shap_values)}
+m = max(d, key=d.get)
+print(" ".join(texts_[-1:][0]))
+shap.force_plot(explainer.expected_value[m], shap_values[m][0, :len_], texts_[-1:][0])
 ```
 ![Example SHAP positive sentiment](figures/shap_pos.png)
 ![Example SHAP negative sentiment](figures/shap_neg.png)
+
+### c) Our visualization
+```python
+from explainers import visualize_explanations
+
+visualize_explanations.bar_chart_explanation(text, contribution_values, class_to_explain, prediction_probability)
+visualize_explanations.text_box_explanation(text, contribution_values)
+```
+![Example prediction explanation](figures/visualize_expl.png)
