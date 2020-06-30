@@ -111,4 +111,4 @@ visualize_explanations.bar_chart_explanation(text, contribution_values, class_to
 visualize_explanations.text_box_explanation(text, contribution_values)
 ```
 An example of our approach to visualization of prediction explanations for positive sentiment:
-![Example prediction explanation](figures/visualize_expl.png)
+![Example prediction explanation](figures/visualize_expl_new.png)
