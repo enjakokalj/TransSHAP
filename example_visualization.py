@@ -1,4 +1,5 @@
 import numpy as np
+from explainers import visualize_explanations
 
 words_impact = [
     [["Being", "offensive", "isn't", "illegal", "you", "idiot"],
@@ -10,7 +11,5 @@ words_impact = [
 for text, contribution_values, f in words_impact:
     class_to_explain = ["Positive", "Neutral", "Negative"][int(np.argmax(f))]
     prediction_probability = f[np.argmax(f)] * 100
-
-    from explainers import visualize_explanations
     visualize_explanations.bar_chart_explanation(text, contribution_values, class_to_explain, prediction_probability)
     visualize_explanations.text_box_explanation(text, contribution_values)
