@@ -6,29 +6,6 @@ def bar_chart_explanation(tokenized_text, values, class_to_explain, pred):
     values = np.array(values)
     plt.figure(figsize=(12, 6))
     
-#     val_max = np.max(values)
-#     f=[]
-#     for i, x in enumerate(str(val_max)):
-#         if x in "0.":
-#             f.append(x)
-#         else:
-#             f.append(str(int(x)+1))
-#             break
-#     plt.ylim(top=float("".join(f)))
-    
-#     val_min = np.min(values)
-#     if val_min < 0:
-#         f=[]
-#         for i, x in enumerate(str(val_min)):
-#             if x in "0.":
-#                 f.append(x)
-#             else:
-#                 f.append(str(int(x)-1))
-#                 break
-#         plt.ylim(bottom=float("".join(f)))
-#     else:
-#         plt.ylim(bottom=0)
-    
     colors = ["green" if x > 0 else "red" for x in values]
     plt.bar([*range(len(values))], values, color=colors)
     plt.xticks(np.arange(len(tokenized_text)), tokenized_text, fontsize=15)
@@ -44,7 +21,7 @@ def text_box_explanation(raw, values):
     values = np.array(values)
     fixed_y = 0.5
     fig, ax = plt.subplots(figsize=(12, 6))
-    Yy = 2
+    Yy = 5
     plt.xlim((0, Yy))
     plt.ylim((0.4, 0.6))
     threshold = sum(abs(values)) * 0.01
@@ -56,7 +33,7 @@ def text_box_explanation(raw, values):
     coord = []
     for i, word in enumerate(raw):
         x = 0 if not coord else coord[-1][1]
-        t = plt.text(x=x, y=fixed_y, s=word, ha="center", va="center", size=35, rotation=0., color=text_color[i],
+        t = plt.text(x=x, y=fixed_y, s=word, ha="center", va="center", size=20, rotation=0., color=text_color[i],
                      bbox=dict(boxstyle="square", ec="white", fc=show_box[i], ))
         tt = t.get_window_extent(renderer=fig.canvas.get_renderer())
         transf = ax.transData.inverted()
