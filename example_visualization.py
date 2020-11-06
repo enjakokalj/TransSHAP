@@ -41,7 +41,9 @@ texts_ = [split_string(x) for x in texts]
 data = pd.read_csv("data.csv").iloc[:, 1:]
 for i in range(data.shape[0]):
     d = data.iloc[i, :]
-    text, class_to_explain, prediction_probability = split_string(d["text"]), ["Positive", "Neutral", "Negative"][d["pred"]], d["prob"]
-    contribution_values = list(d[3:3+len(text)])
-    visualize_explanations.bar_chart_explanation(text, contribution_values, class_to_explain, prediction_probability)
-    visualize_explanations.text_box_explanation(text, contribution_values)
+    text, class_to_explain, prediction_probability = split_string(d["text"]), \
+                                                     ["Positive", "Neutral", "Negative"][d["pred"]], d["prob"]
+    contribution_values = list(d[3:3 + len(text)])
+    # visualize_explanations.bar_chart_explanation(text, contribution_values, class_to_explain, prediction_probability)
+    # visualize_explanations.text_box_explanation(text, contribution_values)
+    visualize_explanations.joint_visualization(text, contribution_values, class_to_explain, prediction_probability)

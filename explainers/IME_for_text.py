@@ -157,10 +157,10 @@ class IMExplainer:
                 stddevs_instance.append(stddev)
 
                 # for i in range(len(expl)):
-                    # contribution_values[i, id, a] = expl[i]
-                    # stddevs[i, id, a] = stddev[i]
-                
-            logging.info(f"Example {ii+1}/{len(data_to_explain)} stop")
+                # contribution_values[i, id, a] = expl[i]
+                # stddevs[i, id, a] = stddev[i]
+
+            logging.info(f"Example {ii + 1}/{len(data_to_explain)} stop")
 
             n_iter_final.append(n_iter_temp)
             contribution_values.append(np.array(expl_instance))
@@ -170,7 +170,6 @@ class IMExplainer:
         self.stddev = stddevs
 
         return contribution_values
-
 
     def explain(self, data_to_explain):
         contribution_values_raw = self.IME_text(data_to_explain)

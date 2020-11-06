@@ -14,7 +14,6 @@ class LIMExplainer:
         self.device = "cpu"
         self.tweet_tokenizer = TweetTokenizer()
 
-
     def predict(self, data):
         self.model.to(self.device)
 
@@ -51,11 +50,9 @@ class LIMExplainer:
         final = [self.softmax(x) for x in predictions]
         return np.array(final)
 
-
     def softmax(self, it):
         exps = np.exp(np.array(it))
         return exps / np.sum(exps)
-
 
     def split_string(self, string):
         data_raw = self.tweet_tokenizer.tokenize(string)

@@ -16,7 +16,6 @@ class SHAPexplainer:
         self.words_dict = words_dict
         self.words_dict_reverse = words_dict_reverse
 
-
     def predict(self, indexed_words):
         # self.model.to(self.device)
 
@@ -53,17 +52,14 @@ class SHAPexplainer:
         final = [self.softmax(x) for x in predictions]
         return np.array(final)
 
-
     def softmax(self, it):
         exps = np.exp(np.array(it))
         return exps / np.sum(exps)
-
 
     def split_string(self, string):
         data_raw = self.tweet_tokenizer.tokenize(string)
         data_raw = [x for x in data_raw if x not in ".,:;'"]
         return data_raw
-
 
     def tknz_to_idx(self, train_data, MAX_SEQ_LEN=None):
         tokenized_nopad = [self.tokenizer.tokenize(" ".join(text)) for text in train_data]
@@ -74,7 +70,6 @@ class SHAPexplainer:
             tokenized_text[i][0:len(tokenized_nopad[i])] = tokenized_nopad[i][0:MAX_SEQ_LEN]
         indexed_tokens = np.array([np.array(self.tokenizer.convert_tokens_to_ids(tt)) for tt in tokenized_text])
         return indexed_tokens, tokenized_text, MAX_SEQ_LEN
-
 
     def dt_to_idx(self, data, max_seq_len=None):
         idx_dt = [[self.words_dict_reverse[xx] for xx in x] for x in data]
