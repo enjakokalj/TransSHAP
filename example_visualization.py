@@ -46,4 +46,4 @@ for i in range(data.shape[0]):
     contribution_values = list(d[3:3 + len(text)])
     # visualize_explanations.bar_chart_explanation(text, contribution_values, class_to_explain, prediction_probability)
     # visualize_explanations.text_box_explanation(text, contribution_values)
-    visualize_explanations.joint_visualization(text, contribution_values, class_to_explain, prediction_probability)
+    visualize_explanations.joint_visualization(text, contribution_values, class_to_explain, prediction_probability, i)

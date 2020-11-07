@@ -11,7 +11,7 @@ font_properties = {'family': 'serif', 'serif': ['Computer Modern Roman'],
 
 font_manager.FontProperties(family='Computer Modern Roman', style='normal',
                             size=font_size, weight='normal', stretch='normal')
-rc('text', usetex=True)
+# rc('text', usetex=True)
 rc('font', **font_properties)
 
 
@@ -69,8 +69,7 @@ def text_box_explanation(raw, values):
     plt.tight_layout()
     plt.show()
 
-
-def joint_visualization(tokenized_text, values, class_to_explain, pred):
+def joint_visualization(tokenized_text, values, class_to_explain, pred, i):
     ## first plot.
     sns.set_style('whitegrid')
     fig, ax = plt.subplots(1, 1)
@@ -80,21 +79,23 @@ def joint_visualization(tokenized_text, values, class_to_explain, pred):
     # print(out_indices)
     # print(values)
     # colors = [colors[x] for x in out_indices]
-
     colors = ["green" if x > 0 else "red" for x in values]
     plt.bar([*range(len(values))], values, color=colors, edgecolor="black", alpha=0.6)
+    ax.set_xticks([*range(len(values))])
     # sns.barplot([*range(len(values))], values, color = colors, edgecolor = "black", alpha = 0.6)
-    tokenized_text_refactored = ["random"] + tokenized_text
+    tokenized_text_refactored = tokenized_text
+    # print(ax.get_xticklabels(which="both"))
     ax.set_xticklabels(tokenized_text_refactored)
-    colors_ticks = ["r"] + colors
+    colors_ticks = colors
     for ticklabel, tickcolor in zip(ax.get_xticklabels(), colors_ticks):
         bbox = dict(boxstyle="round", ec="black", fc=tickcolor, alpha=0.2)
         plt.setp(ticklabel, bbox=bbox)
     # ax.set_xticklabels(ax.get_xticklabels(), rotation = 45, ha="right")
     plt.axhline(y=0, color='black', linestyle='dashed')
     pred *= 100
-    title = f"Predicted class: {class_to_explain} ({pred:.2f}\%)"
+    title = f"Predicted class: {class_to_explain} ({pred:.2f} %)"
     fig.suptitle(title)
     plt.ylabel("Impact on model output")
     pname = "".join(tokenized_text[0:3])
-    plt.show()
+    # plt.show()
+    plt.savefig(f"figures/our_vis_{i}", dpi=300)
