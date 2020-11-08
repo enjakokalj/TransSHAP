@@ -69,9 +69,13 @@ def text_box_explanation(raw, values):
     plt.tight_layout()
     plt.show()
 
+def determine_graph_width(max_word, max_length):
+    return max_word * max_length * 0.15
+
 def joint_visualization(tokenized_text, values, class_to_explain, pred, i):
     ## first plot.
     sns.set_style('whitegrid')
+    plt.rcParams["figure.figsize"] = (determine_graph_width(max_word=len(max(tokenized_text, key=len)), max_length=len(tokenized_text)), 6)
     fig, ax = plt.subplots(1, 1)
     values = np.array(values)
     # colors = sns.color_palette("coolwarm", len(values))
@@ -80,12 +84,12 @@ def joint_visualization(tokenized_text, values, class_to_explain, pred, i):
     # print(values)
     # colors = [colors[x] for x in out_indices]
     colors = ["green" if x > 0 else "red" for x in values]
+
     plt.bar([*range(len(values))], values, color=colors, edgecolor="black", alpha=0.6)
     ax.set_xticks([*range(len(values))])
     # sns.barplot([*range(len(values))], values, color = colors, edgecolor = "black", alpha = 0.6)
-    tokenized_text_refactored = tokenized_text
     # print(ax.get_xticklabels(which="both"))
-    ax.set_xticklabels(tokenized_text_refactored)
+    ax.set_xticklabels(tokenized_text)
     colors_ticks = colors
     for ticklabel, tickcolor in zip(ax.get_xticklabels(), colors_ticks):
         bbox = dict(boxstyle="round", ec="black", fc=tickcolor, alpha=0.2)
@@ -97,5 +101,5 @@ def joint_visualization(tokenized_text, values, class_to_explain, pred, i):
     fig.suptitle(title)
     plt.ylabel("Impact on model output")
     pname = "".join(tokenized_text[0:3])
-    # plt.show()
-    plt.savefig(f"figures/our_vis_{i}", dpi=300)
+    plt.show()
+    # plt.savefig(f"figures/our_vis_{i}", dpi=300)
