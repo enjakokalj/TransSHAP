@@ -66,10 +66,12 @@ def determine_graph_width(max_word, max_length):
 def joint_visualization(tokenized_text, values, class_to_explain, pred, i):
     ## first plot.
 
-    if len(tokenized_text) > 10:    
-        font_size = 7
-    else:
-        font_size = 12
+    # if len(tokenized_text) > 10:    
+    #     font_size = 7
+    # else:
+    #     font_size = 12
+
+    font_size = 20 - len(tokenized_text)
     font_properties = {'family': 'serif', 'serif': ['Computer Modern Roman'],
                    'weight': 'normal', 'size': font_size}
     
