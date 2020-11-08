@@ -5,15 +5,6 @@ import seaborn as sns
 import itertools
 import glob
 
-font_size = 12
-font_properties = {'family': 'serif', 'serif': ['Computer Modern Roman'],
-                   'weight': 'normal', 'size': font_size}
-
-font_manager.FontProperties(family='Computer Modern Roman', style='normal',
-                            size=font_size, weight='normal', stretch='normal')
-# rc('text', usetex=True)
-rc('font', **font_properties)
-
 
 def bar_chart_explanation(tokenized_text, values, class_to_explain, pred):
     values = np.array(values)
@@ -74,6 +65,19 @@ def determine_graph_width(max_word, max_length):
 
 def joint_visualization(tokenized_text, values, class_to_explain, pred, i):
     ## first plot.
+
+    if len(tokenized_text) > 10:    
+        font_size = 7
+    else:
+        font_size = 12
+    font_properties = {'family': 'serif', 'serif': ['Computer Modern Roman'],
+                   'weight': 'normal', 'size': font_size}
+    
+    font_manager.FontProperties(family='Computer Modern Roman', style='normal',
+                            size=font_size, weight='normal', stretch='normal')
+    # rc('text', usetex=True)
+    rc('font', **font_properties)
+    
     sns.set_style('whitegrid')
     plt.rcParams["figure.figsize"] = (determine_graph_width(max_word=len(max(tokenized_text, key=len)), max_length=len(tokenized_text)), 6)
     fig, ax = plt.subplots(1, 1)
