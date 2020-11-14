@@ -1,0 +1,7 @@
+numpy
+matplotlib
+seaborn
+shap
+pandas
+nltk
+transformers==2.8.0

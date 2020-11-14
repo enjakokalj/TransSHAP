@@ -66,12 +66,12 @@ def determine_graph_width(max_word, max_length):
 def joint_visualization(tokenized_text, values, class_to_explain, pred, i):
     ## first plot.
 
-    # if len(tokenized_text) > 10:    
-    #     font_size = 7
+    # if len(tokenized_text) > 10:
+    #     font_size = 10
     # else:
     #     font_size = 12
 
-    font_size = 20 - len(tokenized_text)
+    font_size = 14#20 - (len(tokenized_text) * 0.8)
     font_properties = {'family': 'serif', 'serif': ['Computer Modern Roman'],
                    'weight': 'normal', 'size': font_size}
     
@@ -89,7 +89,21 @@ def joint_visualization(tokenized_text, values, class_to_explain, pred, i):
     # print(out_indices)
     # print(values)
     # colors = [colors[x] for x in out_indices]
-    colors = ["green" if x > 0 else "red" for x in values]
+
+    perc_pos, perc_neg = 0, 0
+    for xx in [[x for x in values if x > 0], [x for x in values if x <= 0]]:
+        try:
+            if all([x > 0 for x in xx]):
+                perc_pos = np.percentile(xx, 50)
+            elif all([x <= 0 for x in xx]):
+                perc_neg = np.percentile(xx, 50)
+        except IndexError:
+            pass
+
+    colors = [["mediumaquamarine", "green"][int(x > perc_pos)] if x > 0 else
+                       ["red", "tomato"][int(x > perc_neg)] for x in values]
+    # text_color = ["white" if abs(x) > threshold and x > 0 else "black" for x in values]
+    # colors = ["green" if x > 0 else "red" for x in values]
 
     plt.bar([*range(len(values))], values, color=colors, edgecolor="black", alpha=0.6)
     ax.set_xticks([*range(len(values))])
@@ -107,5 +121,6 @@ def joint_visualization(tokenized_text, values, class_to_explain, pred, i):
     fig.suptitle(title)
     plt.ylabel("Impact on model output")
     pname = "".join(tokenized_text[0:3])
-    plt.show()
-    # plt.savefig(f"figures/our_vis_{i}", dpi=300)
+    # plt.show()
+    plt.savefig(f"figures/our_vis_{i}", dpi=300)
+    print(f"DONE figures/our_vis_{i}")
