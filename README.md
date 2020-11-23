@@ -107,8 +107,7 @@ SHAP explanations for positive (top) and negative (bottom) sentiment:
 ```python
 from explainers import visualize_explanations
 
-visualize_explanations.bar_chart_explanation(text, contribution_values, class_to_explain, prediction_probability)
-visualize_explanations.text_box_explanation(text, contribution_values)
+visualize_explanations.joint_visualization(text, shap_values[m][0, :len_], ["Positive", "Neutral", "Negative"][m], prediction_probability)
 ```
 An example of our approach to visualization of prediction explanations for positive sentiment:
 ![Example prediction explanation](figures/visualize_expl_new.png)
