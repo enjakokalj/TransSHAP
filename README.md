@@ -110,4 +110,5 @@ from explainers import visualize_explanations
 visualize_explanations.joint_visualization(text, shap_values[m][0, :len_], ["Positive", "Neutral", "Negative"][m], prediction_probability)
 ```
 An example of our approach to visualization of prediction explanations for positive sentiment:
+
 ![Example prediction explanation](figures/figure_transshap.png)
