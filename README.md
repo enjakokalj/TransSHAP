@@ -1,4 +1,4 @@
-# interpret_BERT
+# TransSHAP
 (a, b) Interpreting the BERT model with explanation methods LIME (https://github.com/marcotcr/lime) and SHAP (https://github.com/slundberg/shap) using their visualization approach, and (c) presenting our own visualizations that make the explanation of predictions for textual data more intuitive.
 
 ### Load model / test texts
@@ -103,7 +103,7 @@ SHAP explanations for positive (top) and negative (bottom) sentiment:
 ![Example SHAP positive sentiment](figures/shap_pos.png)
 ![Example SHAP negative sentiment](figures/shap_neg.png)
 
-### c) Our visualization
+### c) Kernel SHAP and TransSHAP visualizer
 ```python
 from explainers import visualize_explanations
 
