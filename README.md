@@ -107,8 +107,13 @@ SHAP explanations for positive (top) and negative (bottom) sentiment:
 ```python
 from explainers import visualize_explanations
 
-visualize_explanations.joint_visualization(text, shap_values[m][0, :len_], ["Positive", "Neutral", "Negative"][m], prediction_probability)
+text = texts_[-1:]
+to_use = idx_texts[-1:].reshape(1, -1)
+f = predictor.predict(to_use)
+pred_f = np.argmax(f[0])
+
+visualize_explanations.joint_visualization(text[0], shap_values[pred_f][0, :len(text[0])], ["Positive", "Neutral", "Negative"][int(pred_f)], f[0][pred_f], -1)
 ```
-An example of our approach to visualization of prediction explanations for positive sentiment:
+An example of our approach to visualization of prediction explanations for negative sentiment:
 
 ![Example prediction explanation](figures/figure_transshap.png)
