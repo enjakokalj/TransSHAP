@@ -81,11 +81,10 @@ for h, hh in enumerate(bag_of_words):
     words_dict_reverse[hh] = h + 1
 
 predictor = SHAPexplainer(model, tokenizer, words_dict, words_dict_reverse)
-rand_id = random.sample([*range(len(train_data))], 90)
-train_dt = np.array([predictor.split_string(x) for x in np.array(train_data)[rand_id]])
+train_dt = np.array([predictor.split_string(x) for x in np.array(train_data)])
 idx_train_data, max_seq_len = predictor.dt_to_idx(train_dt)
 
-explainer = shap.KernelExplainer(model=predictor.predict, data=idx_train_data)
+explainer = shap.KernelExplainer(model=predictor.predict, data=shap.kmeans(idx_train_data, k=50))
 
 texts_ = [predictor.split_string(x) for x in texts]
 idx_texts, _ = predictor.dt_to_idx(texts_, max_seq_len=max_seq_len)
