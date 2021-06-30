@@ -116,3 +116,5 @@ visualize_explanations.joint_visualization(text[0], shap_values[pred_f][0, :len(
 An example of our approach to visualization of prediction explanations for negative sentiment:
 
 ![Example prediction explanation](figures/figure_transshap.png)
+
+If you use this work, please cite  KOKALJ, Enja, ŠKRLJ, Blaž, LAVRAČ, Nada, POLLAK, Senja, ROBNIK ŠIKONJA, Marko. BERT meets Shapley : extending SHAP explanations to transformer-based classifiers. V: TOIVONEN, Hannu (ur.), BOGGIA, Michele (ur.). EACL hackashop on news media content analysis and automated report generation : proceedings. Stroudsburg: Association for Computational Linguistics = ACL, str. 16-21. https://www.aclweb.org/anthology/2021.hackashop-1.3.pdf.
